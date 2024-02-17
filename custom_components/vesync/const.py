@@ -145,7 +145,7 @@ SENSOR_TYPES_AIRFRYER = {
 
 SENSOR_TYPES_CAF = {
     "Chicken": {
-        "cookSetTime": 1200,
+        "cookSetTime": 20,
         "cookTemp": 200,
         "mode": "Chicken",
         "shakeTime": 0,
@@ -155,7 +155,7 @@ SENSOR_TYPES_CAF = {
         "recipeId": 2,
     },
     "Steak": {
-        "cookSetTime": 480,
+        "cookSetTime": 8,
         "cookTemp": 205,
         "mode": "Steak",
         "shakeTime": 0,
@@ -165,7 +165,7 @@ SENSOR_TYPES_CAF = {
         "recipeId": 1,
     },
     "Seafood": {
-        "cookSetTime": 480,
+        "cookSetTime": 8,
         "cookTemp": 190,
         "mode": "Seafood",
         "shakeTime": 0,
@@ -175,7 +175,7 @@ SENSOR_TYPES_CAF = {
         "recipeId": 3,
     },
     "Veggies": {
-        "cookSetTime": 360,
+        "cookSetTime": 6,
         "cookTemp": 195,
         "mode": "Veggies",
         "shakeTime": 0,
@@ -185,7 +185,7 @@ SENSOR_TYPES_CAF = {
         "recipeId": 15,
     },
     "French fries": {
-        "cookSetTime": 1200,
+        "cookSetTime": 20,
         "cookTemp": 195,
         "mode": "French fries",
         "shakeTime": 0,
@@ -195,7 +195,7 @@ SENSOR_TYPES_CAF = {
         "recipeId": 6,
     },
     "Frozen": {
-        "cookSetTime": 720,
+        "cookSetTime": 12,
         "cookTemp": 200,
         "mode": "Frozen",
         "shakeTime": 0,
@@ -205,7 +205,7 @@ SENSOR_TYPES_CAF = {
         "recipeId": 5,
     },
     "AirFry": {
-        "cookSetTime": 600,
+        "cookSetTime": 10,
         "cookTemp": 180,
         "mode": "AirFry",
         "shakeTime": 0,
@@ -215,7 +215,7 @@ SENSOR_TYPES_CAF = {
         "recipeId": 14,
     },
     "Reheat": {
-        "cookSetTime": 300,
+        "cookSetTime": 5,
         "cookTemp": 175,
         "mode": "Reheat",
         "shakeTime": 0,
@@ -225,7 +225,7 @@ SENSOR_TYPES_CAF = {
         "recipeId": 16,
     },
     "Roast": {
-        "cookSetTime": 600,
+        "cookSetTime": 10,
         "cookTemp": 205,
         "mode": "Roast",
         "shakeTime": 0,
@@ -235,7 +235,7 @@ SENSOR_TYPES_CAF = {
         "recipeId": 13,
     },
     "Bake": {
-        "cookSetTime": 1200,
+        "cookSetTime": 20,
         "cookTemp": 160,
         "mode": "Bake",
         "shakeTime": 0,
@@ -245,7 +245,7 @@ SENSOR_TYPES_CAF = {
         "recipeId": 9,
     },
     "Broil": {
-        "cookSetTime": 600,
+        "cookSetTime": 10,
         "cookTemp": 205,
         "mode": "Broil",
         "shakeTime": 0,
