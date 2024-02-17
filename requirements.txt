@@ -1,1 +1,1 @@
-cosmin-cucu-pyvesyncv2==0.0.9
+cosmin-cucu-pyvesyncv2==0.1
