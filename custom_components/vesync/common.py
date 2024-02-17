@@ -18,8 +18,8 @@ from .const import (
     VS_HUMIDIFIERS_TYPES,
     VS_LIGHTS,
     VS_NUMBERS,
+    VS_SELECT,
     VS_SENSORS,
-
     VS_SWITCHES,
 )
 
@@ -29,6 +29,20 @@ _LOGGER = logging.getLogger(__name__)
 def has_feature(device, dictionary, attribute):
     """Return the detail of the attribute."""
     return getattr(device, dictionary, {}).get(attribute, None) is not None
+
+
+def is_humidifier(device_type: str) -> bool:
+    """Return true if the device type is a humidifier."""
+    if fan_model_features(device_type)["module"] in VS_HUMIDIFIERS_TYPES:
+        return True
+    return False
+
+
+def is_air_purifier(device_type: str) -> bool:
+    """Return true if the device type is a an air purifier."""
+    if fan_model_features(device_type)["module"] in VS_FAN_TYPES:
+        return True
+    return False
 
 
 async def async_process_devices(hass, manager):
@@ -42,7 +56,13 @@ async def async_process_devices(hass, manager):
         VS_NUMBERS: [],
         VS_BINARY_SENSORS: [],
         VS_BUTTON: [],
+        VS_SELECT: [],
     }
+
+    _LOGGER.warning(
+        "Reading from the following manager: %s",
+        manager._dev_list.items(),
+    )
 
     redacted = async_redact_data(
         {k: [d.__dict__ for d in v] for k, v in manager._dev_list.items()},
@@ -66,9 +86,9 @@ async def async_process_devices(hass, manager):
     if manager.fans:
         for fan in manager.fans:
             # VeSync classifies humidifiers as fans
-            if fan_model_features(fan.device_type)["module"] in VS_HUMIDIFIERS_TYPES:
+            if is_humidifier(fan.device_type):
                 devices[VS_HUMIDIFIERS].append(fan)
-            elif fan_model_features(fan.device_type)["module"] in VS_FAN_TYPES:
+            elif is_air_purifier(fan.device_type)["module"]:
                 devices[VS_FANS].append(fan)
             else:
                 _LOGGER.warning(
@@ -82,7 +102,6 @@ async def async_process_devices(hass, manager):
             devices[VS_SENSORS].append(fan)
             devices[VS_BINARY_SENSORS].append(fan)
             devices[VS_LIGHTS].append(fan)
-
     if manager.bulbs:
         devices[VS_LIGHTS].extend(manager.bulbs)
 
@@ -105,7 +124,7 @@ async def async_process_devices(hass, manager):
                 in VS_AIRFRYER_TYPES
             ):
                 _LOGGER.warning(
-                    "Found air fryer type %s, model %s support in progress.\n",
+                    "Found air fryer type %s, model %s support.\n",
                     airfryer.device_name,
                     airfryer.device_type,
                 )
@@ -114,9 +133,11 @@ async def async_process_devices(hass, manager):
                 devices[VS_SWITCHES].append(airfryer)
                 devices[VS_BUTTON].append(airfryer)
                 devices[VS_NUMBERS].append(airfryer)
+                devices[VS_SELECT].append(airfryer)
+
             else:
-                _LOGGER.warning(
-                    "Unknown device type %s %s (enable debug for more info)",
+                _LOGGER.error(
+                    "Found air fryer type %s , model %s NOT SUPPORT.",
                     airfryer.device_name,
                     airfryer.device_type,
                 )

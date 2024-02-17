@@ -22,6 +22,7 @@ from .const import (
     VS_LIGHTS,
     VS_MANAGER,
     VS_NUMBERS,
+    VS_SELECT,
     VS_SENSORS,
     VS_SWITCHES,
 )
@@ -35,7 +36,7 @@ PLATFORMS = {
     Platform.NUMBER: VS_NUMBERS,
     Platform.BINARY_SENSOR: VS_BINARY_SENSORS,
     Platform.BUTTON: VS_BUTTON,
-
+    Platform.SELECT: VS_SELECT,
 }
 
 _LOGGER = logging.getLogger(__name__)
@@ -76,7 +77,7 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
         _LOGGER,
         name="vesync",
         update_method=async_update_data,
-        update_interval=timedelta(seconds=10),
+        update_interval=timedelta(seconds=30),
     )
 
     # Fetch initial data so we have data when entities subscribe
@@ -96,6 +97,7 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
     async def async_new_device_discovery(service: ServiceCall) -> None:
         """Discover if new devices should be added."""
         manager = hass.data[DOMAIN][config_entry.entry_id][VS_MANAGER]
+        _LOGGER.warning("Configured the following manager %s", manager)
         dev_dict = await async_process_devices(hass, manager)
 
         def _add_new_devices(platform: str) -> None:
@@ -112,7 +114,7 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
                 else:
                     hass.async_create_task(forward_setup(config_entry, platform))
 
-        for k, v in PLATFORMS.items():
+        for k in PLATFORMS.items():
             _add_new_devices(k)
 
     hass.services.async_register(

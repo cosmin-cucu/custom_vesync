@@ -25,6 +25,7 @@ from .const import (
     VS_MODE_AUTO,
     VS_MODE_HUMIDITY,
     VS_MODE_MANUAL,
+    VS_MODE_NIGHT_LIGHT_BRIGHTNESS,
     VS_MODE_SLEEP,
     VS_TO_HA_ATTRIBUTES,
 )
@@ -33,7 +34,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 MAX_HUMIDITY = 80
-MIN_HUMIDITY = 30
+MIN_HUMIDITY = 40
 
 
 VS_TO_HA_MODE_MAP = {
@@ -125,6 +126,11 @@ class VeSyncHumidifierHA(VeSyncDevice, HumidifierEntity):
         return SUPPORT_MODES
 
     @property
+    def night_light_brightness(self) -> int:
+        """Return the night light brightness."""
+        return self.smarthumidifier.details["night_light_brightness"]
+    
+    @property
     def target_humidity(self) -> int:
         """Return the humidity we try to reach."""
         return self.smarthumidifier.config["auto_target_humidity"]
@@ -172,25 +178,29 @@ class VeSyncHumidifierHA(VeSyncDevice, HumidifierEntity):
     def set_mode(self, mode: str) -> None:
         """Set the mode of the device."""
         if mode not in self.available_modes:
-            raise ValueError(
-                "{mode} is not one of the valid available modes: {self.available_modes}"
-            )
-        if self.smarthumidifier.set_humidity_mode(_get_vs_mode(mode)):
-            self.schedule_update_ha_state()
+            raise ValueError("{mode} is not one of the valid available modes: {self.available_modes}")
+        if mode == 'auto':
+            if self.smarthumidifier.set_auto_mode():
+                self.schedule_update_ha_state()
         else:
-            raise ValueError("An error occurred while setting mode.")
+            if self.smarthumidifier.set_humidity_mode(_get_vs_mode(mode)):
+                self.schedule_update_ha_state()
+            else:
+                raise ValueError("An error occurred while setting mode.")
 
     def turn_on(
         self,
         **kwargs,
     ) -> None:
         """Turn the device on."""
-        success = self.smarthumidifier.turn_on()
+        success = self.smarthumidifier.toggle_switch(True)
+        self.schedule_update_ha_state()
         if not success:
             raise ValueError("An error occurred while turning on.")
 
     def turn_off(self, **kwargs) -> None:
         """Turn the device off."""
-        success = self.smarthumidifier.turn_off()
+        success = self.smarthumidifier.toggle_switch(False)
+        self.schedule_update_ha_state()
         if not success:
             raise ValueError("An error occurred while turning off.")
