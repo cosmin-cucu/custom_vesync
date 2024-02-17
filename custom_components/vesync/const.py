@@ -278,7 +278,7 @@ BTN_TYPES = {
         "icon": "mdi:update",
     },
     "startCook": {
-        "mode": "startCook",
+        "mode": "ready",
         "name": "Start Cook",
         "icon": "mdi:play",
     },
